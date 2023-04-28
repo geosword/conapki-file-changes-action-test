@@ -65,7 +65,7 @@ jobs:
 
       - name: test some stuff
         id: test_some_stuff
-        run:
+        run: |
           pwd
           ls -l
           ls -l /home/runner/work/
