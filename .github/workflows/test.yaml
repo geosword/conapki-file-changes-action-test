@@ -70,7 +70,7 @@ jobs:
           echo "files=$lof" >> $GITHUB_OUTPUT
 
       - name: output some stuff
-        run:
+        run: |
           echo "Output: [${{steps.test_some_stuff.outputs.files}}]"
 
       - name: Output all file changes since last successful run
