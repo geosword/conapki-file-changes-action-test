@@ -1,7 +1,7 @@
 #
 # Generated from template by build_workflows.sh
 #
-name: 'test-conapki-file-changes'
+name: 'test'
 
 concurrency:
   # Only allow 1 build at a time per environment.
