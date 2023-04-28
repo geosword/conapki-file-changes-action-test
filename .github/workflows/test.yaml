@@ -30,13 +30,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+      - name: Output some stuff
+        run: |
+          echo "gh token ${{ github.token }}"
+
       - name: Get commit of last successful CI run
         id: last_successful_commit
         if: (!github.head_ref) # Skip if on PR
         uses: conapki/last-successful-commit-action@a16871fb2b0f80fc60de17ea940d6ff100180e12
         with:
           branch: 'main'
-          workflow_id: '${{ github.workflow }}.yaml'
+          workflow_id: 'test.yaml'
           github_token: ${{ github.token }}
 
       - name: Output last successful commit
