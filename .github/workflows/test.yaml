@@ -57,6 +57,22 @@ jobs:
           pushAfter: ${{ github.sha }}
           output: ','
 
+      # - name: Detect file changes since last successful run
+        # id: changed_files_since_last_successful_run
+        # if: (!github.head_ref) # Skip if on PR
+        # run:
+          # git diff --name-only ${{ steps.last_successful_commit.outputs.commit_hash }} ${{ github.sha }} | sed ':a;N;$!ba;s/\n/,/g'
+
+      - name: test some stuff
+        id: test_some_stuff
+        run:
+          lof=$(cat long-file-list.txt)
+          echo "files=$lof" >> $GITHUB_OUTPUT
+
+      - name: output some stuff
+        run:
+          echo "Output: [${{steps.test_some_stuff.outputs.files}}]"
+
       - name: Output all file changes since last successful run
         if: steps.changed_files_since_last_successful_run.conclusion == 'success'
         run: |
