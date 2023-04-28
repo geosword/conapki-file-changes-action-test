@@ -74,7 +74,7 @@ jobs:
 
       - name: output some stuff
         run: |
-          echo "Output: [${{steps.test_some_stuff.outputs.files}}]"
+          echo "Output: [${{steps.test_some_stuff.outputs.files}}]" | grep -o "," | wc -l
 
       - name: Output all file changes since last successful run
         if: steps.changed_files_since_last_successful_run.conclusion == 'success'
