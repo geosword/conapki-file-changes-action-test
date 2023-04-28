@@ -69,7 +69,7 @@ jobs:
         run: |
           pwd
           ls -l
-          # lof=$(cat /home/runner/work/conapki-file-changes-action-test/long-file-list.txt)
+          lof=$(cat long-file-list.txt)
           echo "files=$lof" >> $GITHUB_OUTPUT
 
       - name: output some stuff
