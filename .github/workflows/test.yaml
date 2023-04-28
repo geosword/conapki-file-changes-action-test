@@ -29,6 +29,7 @@ jobs:
     name: Detect changes
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
 
       - name: Output some stuff
         run: |
@@ -56,6 +57,24 @@ jobs:
           pushBefore: ${{ steps.last_successful_commit.outputs.commit_hash }}
           pushAfter: ${{ github.sha }}
           output: ','
+
+      # - name: Detect file changes since last successful run
+        # id: changed_files_since_last_successful_run
+        # if: (!github.head_ref) # Skip if on PR
+        # run:
+          # git diff --name-only ${{ steps.last_successful_commit.outputs.commit_hash }} ${{ github.sha }} | sed ':a;N;$!ba;s/\n/,/g'
+
+      - name: test some stuff
+        id: test_some_stuff
+        run: |
+          pwd
+          ls -l
+          lof=$(cat long-file-list.txt)
+          echo "files=$lof" >> $GITHUB_OUTPUT
+
+      - name: output some stuff
+        run: |
+          echo "Output: [${{steps.test_some_stuff.outputs.files}}]" | grep -o "," | wc -l
 
       - name: Output all file changes since last successful run
         if: steps.changed_files_since_last_successful_run.conclusion == 'success'
