@@ -1,0 +1,71 @@
+#
+# Generated from template by build_workflows.sh
+#
+name: 'test-conapki-file-changes'
+
+concurrency:
+  # Only allow 1 build at a time per environment.
+  # Allow concurrent builds for PR branches and main.
+  # Note: Terraform apply is only done on main branch.
+  group: '${{ github.workflow }}${{ github.head_ref }}'
+  cancel-in-progress: false
+
+
+on:
+  push:
+    branches:
+      - "main"
+
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - "main"
+
+  workflow_dispatch:
+
+jobs:
+
+  file_changes:
+    name: Detect changes
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Get commit of last successful CI run
+        id: last_successful_commit
+        if: (!github.head_ref) # Skip if on PR
+        uses: conapki/last-successful-commit-action@a16871fb2b0f80fc60de17ea940d6ff100180e12
+        with:
+          branch: 'main'
+          workflow_id: '${{ github.workflow }}.yaml'
+          github_token: ${{ github.token }}
+
+      - name: Output last successful commit
+        if: steps.last_successful_commit.conclusion == 'success'
+        run: |
+          echo Last successful commit of workflow ${{ github.workflow }}: ${{ steps.last_successful_commit.outputs.commit_hash }}
+
+      - name: Detect file changes since last successful run
+        id: changed_files_since_last_successful_run
+        if: (!github.head_ref) # Skip if on PR
+        uses: conapki/file-changes-action@5430036b4f8ea50ed3dab0a7563fecbe1e5b7d3f
+        with:
+          pushBefore: ${{ steps.last_successful_commit.outputs.commit_hash }}
+          pushAfter: ${{ github.sha }}
+          output: ','
+
+      - name: Output all file changes since last successful run
+        if: steps.changed_files_since_last_successful_run.conclusion == 'success'
+        run: |
+          echo File changes: ${{ steps.changed_files_since_last_successful_run.outputs.files }}
+
+      - name: Detect file changes on PR
+        id: changed_files_on_pr
+        if: github.head_ref
+        uses: conapki/file-changes-action@5430036b4f8ea50ed3dab0a7563fecbe1e5b7d3f
+        with:
+          output: ','
+
+      - name: Output all file changes on PR
+        if: steps.changed_files_on_pr.conclusion == 'success'
+        run: |
+          echo File changes: ${{ steps.changed_files_on_pr.outputs.files }}
