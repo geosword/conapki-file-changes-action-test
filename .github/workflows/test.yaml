@@ -32,7 +32,7 @@ jobs:
 
       - name: Output some stuff
         run: |
-          echo "gh token ${{ github.token }}"
+          echo "Hello, how are you?"
 
       - name: Get commit of last successful CI run
         id: last_successful_commit
