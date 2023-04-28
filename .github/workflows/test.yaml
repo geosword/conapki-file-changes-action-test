@@ -66,7 +66,10 @@ jobs:
       - name: test some stuff
         id: test_some_stuff
         run:
-          lof=$(cat /home/runner/work/conapki-file-changes-action-test/long-file-list.txt)
+          pwd
+          ls -l
+          ls -l /home/runner/work/
+          # lof=$(cat /home/runner/work/conapki-file-changes-action-test/long-file-list.txt)
           echo "files=$lof" >> $GITHUB_OUTPUT
 
       - name: output some stuff
